@@ -1,0 +1,13 @@
+:root {
+  --void: #02030a;
+  --panel: rgba(8, 14, 36, 0.78);
+  --line: rgba(159, 212, 255, 0.18);
+  --ice: #cfe6ff;
+  --glow: #5aa8ff;
+  --violet: #8a7dff;
+  --dim: #7083ad;
+  --f-display: 'Syncopate', 'Eurostile', 'Arial Black', sans-serif;
+  --f-term: 'VT323', 'Courier New', monospace;
+  --f-body: 'IBM Plex Sans', system-ui, sans-serif;
+  color-scheme: dark;
+}

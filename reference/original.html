@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Swaggies — full-stack, infrastructure and systems portfolio.">
+<title>Swaggies Memory Card</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=VT323&family=IBM+Plex+Sans:wght@400;500&display=swap">
+<style>
+/* Layout: low-res three.js void fixed behind; foreground is a console "memory card browser" — save blocks on the left, the selected save's data panel on the right, skills + contact below */
+:root{
+  --void:#02030a;
+  --panel:rgba(8,14,36,.78);
+  --line:rgba(159,212,255,.18);
+  --ice:#cfe6ff;
+  --glow:#5aa8ff;
+  --violet:#8a7dff;
+  --dim:#7083ad;
+  --f-display:"Syncopate","Eurostile","Arial Black",sans-serif;
+  --f-term:"VT323","Courier New",monospace;
+  --f-body:"IBM Plex Sans",system-ui,sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--void);color:var(--ice)}
+body{font-family:var(--f-body);font-size:15px;line-height:1.6;padding-inline:16px;overflow-x:hidden}
+#stage{position:fixed;inset:0;width:100%;height:100%;display:block;image-rendering:pixelated;z-index:0}
+.crt{position:fixed;inset:0;pointer-events:none;z-index:50}
+.scan{background:repeating-linear-gradient(to bottom,transparent 0 2px,rgba(0,0,0,.25) 3px,transparent 4px)}
+.vig{background:radial-gradient(ellipse at center,transparent 50%,rgba(0,0,0,.6) 85%,rgba(0,0,0,.9))}
+
+main{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding-block:56px 72px;display:flex;flex-direction:column;gap:56px}
+a{color:var(--glow)}
+a:focus-visible,button:focus-visible{outline:2px solid var(--glow);outline-offset:3px}
+
+/* hero */
+.sys{font-family:var(--f-term);font-size:1.1rem;color:var(--dim);letter-spacing:.08em}
+.hero h1{font-family:var(--f-display);font-weight:700;font-size:clamp(2rem,8vw,5rem);letter-spacing:.32em;margin:.3rem 0 0;line-height:1.05;color:#eef6ff;
+  text-shadow:0 0 10px var(--glow),0 0 34px rgba(90,168,255,.5),2px 0 rgba(255,60,120,.3),-2px 0 rgba(60,220,255,.3);text-wrap:balance;word-break:break-word}
+.hero .role{font-family:var(--f-display);font-size:clamp(.6rem,1.8vw,.85rem);letter-spacing:.45em;color:var(--dim);margin:1rem 0 0}
+.hero .lede{max-width:60ch;margin:1.4rem 0 0;color:#b9cbea}
+.links{display:flex;flex-wrap:wrap;gap:10px;margin-top:1.4rem}
+.btn{font-family:var(--f-term);font-size:1.15rem;letter-spacing:.12em;color:var(--ice);text-decoration:none;border:1px solid var(--line);background:rgba(11,20,48,.6);padding:.25rem .9rem;cursor:pointer}
+.btn:hover{border-color:var(--glow);color:#fff}
+
+/* section head */
+.head{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px;border-bottom:1px solid var(--line);padding-bottom:8px;margin-bottom:20px}
+.head h2{font-family:var(--f-display);font-size:.8rem;letter-spacing:.4em;margin:0;color:var(--ice)}
+.head span{font-family:var(--f-term);font-size:1.05rem;color:var(--dim);letter-spacing:.08em;font-variant-numeric:tabular-nums}
+
+/* memory card browser */
+.browser{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:24px}
+@media (max-width:860px){.browser{grid-template-columns:minmax(0,1fr)}}
+.slots{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px;align-content:start}
+.slot{appearance:none;background:transparent;border:1px solid transparent;color:inherit;padding:16px 10px 12px;display:flex;flex-direction:column;align-items:center;gap:12px;cursor:pointer;text-align:center;transition:border-color .2s,background .2s}
+.slot:hover{border-color:var(--line)}
+.slot[aria-pressed="true"]{border-color:rgba(90,168,255,.55);background:rgba(20,40,100,.35);box-shadow:0 0 24px rgba(90,168,255,.2) inset}
+.slot .nm{font-family:var(--f-term);font-size:1.2rem;letter-spacing:.06em;line-height:1.1}
+.slot .sz{font-family:var(--f-term);font-size:.95rem;color:var(--dim)}
+
+/* 3D save icon */
+.cube{width:54px;height:54px;perspective:300px}
+.cube .in{position:relative;width:100%;height:100%;transform-style:preserve-3d;transform:rotateX(-22deg) rotateY(35deg)}
+.slot[aria-pressed="true"] .cube .in{animation:spin 6s linear infinite}
+@keyframes spin{to{transform:rotateX(-22deg) rotateY(395deg)}}
+.cube .f{position:absolute;inset:0;border:1px solid rgba(207,230,255,.55);background:var(--c1);opacity:.85;display:grid;place-items:center;font-family:var(--f-display);font-size:.9rem;font-weight:700;color:#fff;text-shadow:0 0 6px var(--c2)}
+.cube .f:nth-child(1){transform:translateZ(27px)}
+.cube .f:nth-child(2){transform:rotateY(180deg) translateZ(27px)}
+.cube .f:nth-child(3){transform:rotateY(90deg) translateZ(27px);background:var(--c2)}
+.cube .f:nth-child(4){transform:rotateY(-90deg) translateZ(27px);background:var(--c2)}
+.cube .f:nth-child(5){transform:rotateX(90deg) translateZ(27px);filter:brightness(1.4)}
+.cube .f:nth-child(6){transform:rotateX(-90deg) translateZ(27px);filter:brightness(.6)}
+
+.data{background:var(--panel);border:1px solid var(--line);padding:22px 22px 26px;min-width:0;backdrop-filter:blur(3px)}
+.data .meta{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 16px;font-family:var(--f-term);font-size:1.15rem;letter-spacing:.04em;margin:0 0 18px}
+.data .meta dt{color:var(--dim)}
+.data .meta dd{margin:0;overflow-wrap:anywhere}
+.data h3{font-family:var(--f-display);font-size:clamp(1rem,2.4vw,1.35rem);letter-spacing:.14em;margin:0 0 14px;line-height:1.35;text-wrap:balance}
+.data .sum{color:#c6d6f2;margin:0 0 16px;max-width:65ch}
+.grp{margin:0 0 14px}
+.grp h4{font-family:var(--f-term);font-weight:400;font-size:1.1rem;letter-spacing:.12em;color:var(--glow);margin:0 0 4px;text-transform:uppercase}
+.grp ul{margin:0;padding-left:1.1rem;color:#c6d6f2}
+.grp li{margin:2px 0}
+.grp li::marker{color:var(--violet)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}
+.chip{font-family:var(--f-term);font-size:1rem;letter-spacing:.05em;border:1px solid var(--line);padding:0 .55rem;color:#b9cbea;background:rgba(2,3,10,.4)}
+.pending{font-family:var(--f-term);font-size:1.15rem;color:var(--dim);border:1px dashed var(--line);padding:10px 12px}
+
+/* skills */
+.skills{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.sk{background:var(--panel);border:1px solid var(--line);padding:14px 16px}
+.sk h3{font-family:var(--f-term);font-weight:400;font-size:1.2rem;letter-spacing:.12em;color:var(--glow);margin:0 0 6px;text-transform:uppercase}
+.sk p{margin:0;color:#c6d6f2;font-size:.94rem}
+
+footer{font-family:var(--f-term);font-size:1.05rem;color:var(--dim);letter-spacing:.08em;display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;border-top:1px solid var(--line);padding-top:14px}
+.blink{animation:bl 1.4s steps(1) infinite}
+@keyframes bl{50%{opacity:.2}}
+/* intro */
+#intro{position:fixed;inset:0;z-index:40;display:grid;place-items:center;padding-inline:16px;transition:opacity 1.2s ease}
+#intro.gone{opacity:0;pointer-events:none}
+body.booting{overflow:hidden}
+body.booting main{opacity:0;pointer-events:none}
+main{transition:opacity 1.6s ease .3s}
+.boot{position:fixed;left:16px;top:calc(16px + env(safe-area-inset-top,0px));font-family:var(--f-term);font-size:1.05rem;line-height:1.25;color:var(--dim);white-space:pre;transition:opacity 1.2s}
+.boot.off{opacity:0}
+.mark{text-align:center;opacity:0;filter:blur(8px);transition:opacity 2.4s ease,filter 2.4s ease}
+.mark.on{opacity:1;filter:blur(0)}
+.mark h2{font-family:var(--f-display);font-weight:700;font-size:clamp(1.8rem,8vw,4.6rem);letter-spacing:.38em;padding-left:.38em;margin:0;color:#eef6ff;
+  text-shadow:0 0 10px var(--glow),0 0 34px rgba(90,168,255,.5),2px 0 rgba(255,60,120,.3),-2px 0 rgba(60,220,255,.3)}
+.mark p{font-family:var(--f-display);font-size:clamp(.55rem,1.6vw,.8rem);letter-spacing:.6em;padding-left:.6em;color:var(--dim);margin:1.1rem 0 0}
+#start{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(14vh + env(safe-area-inset-bottom,0px));font-family:var(--f-term);font-size:clamp(1.3rem,3vw,1.8rem);letter-spacing:.3em;padding:.2rem 1rem .2rem 1.3rem;
+  background:transparent;border:1px solid transparent;color:var(--ice);cursor:pointer;opacity:0;transition:opacity 1.5s;pointer-events:none}
+#start.on{opacity:1;pointer-events:auto;animation:bl 1.6s steps(1) infinite 1.5s}
+#start:hover{border-color:var(--line)}
+.dock{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:45;display:flex;gap:8px}
+@media (prefers-reduced-motion:reduce){.slot[aria-pressed="true"] .cube .in,.blink{animation:none}}
+</style>
+</head>
+<body>
+<canvas id="stage" aria-hidden="true"></canvas>
+<div class="crt scan"></div>
+<div class="crt vig"></div>
+
+<div id="intro">
+  <div class="boot" id="boot" aria-hidden="true"></div>
+  <div class="mark" id="mark"><h2>SWAGGIES</h2></div>
+  <button id="start" type="button">PRESS START</button>
+</div>
+<div class="dock">
+  <button class="btn" id="snd" type="button">SOUND: OFF</button>
+  <button class="btn" id="skip" type="button">SKIP</button>
+</div>
+<main>
+  <header class="hero">
+    <div class="sys">SYSTEM READY · BANGKOK / NONTHABURI, TH · UTC+7</div>
+    <h1>SWAGGIES</h1>
+    <p class="role">FULL-STACK · INFRASTRUCTURE · SYSTEMS</p>
+    <p class="lede">I build web applications and keep the machines under them running: approval workflows for finance teams, live tournament infrastructure, and a learning platform for poker strategy. Comfortable anywhere from a React component down to a VLAN trunk.</p>
+    <div class="links">
+      <a class="btn" href="https://github.com/swaggiesf5" target="_blank" rel="noopener">GITHUB ↗</a>
+      <a class="btn" href="https://thepokeraddict.com" target="_blank" rel="noopener">THEPOKERADDICT.COM ↗</a>
+    </div>
+  </header>
+
+  <section aria-labelledby="mc">
+    <div class="head"><h2 id="mc">MEMORY CARD · SLOT 1</h2><span id="free">5 SAVES · ← → TO BROWSE</span></div>
+    <div class="browser">
+      <div class="slots" id="slots" role="group" aria-label="Projects"></div>
+      <article class="data" id="data" aria-live="polite"></article>
+    </div>
+  </section>
+
+  <section aria-labelledby="sk">
+    <div class="head"><h2 id="sk">SYSTEM CONFIGURATION</h2><span>SKILLS</span></div>
+    <div class="skills">
+      <div class="sk"><h3>Web</h3><p>Next.js, TypeScript, Tailwind CSS, shadcn/ui, full-stack approval workflows, auth with Better Auth, Clerk and OAuth2, Discord bot integrations, Stripe payments.</p></div>
+      <div class="sk"><h3>Data</h3><p>PostgreSQL, SQL Server (schema mapping, manual investigation, logins and restores), advanced Excel with PivotTables and data modeling.</p></div>
+      <div class="sk"><h3>Infra &amp; Cloud</h3><p>Linux administration, Docker, Coolify, Cloudflare, Caddy, Open edX via Tutor, AWS (EC2, S3, Lambda, DCV), VPS migrations (Kamatera), systemd services, GUI automation with xdotool.</p></div>
+      <div class="sk"><h3>Network &amp; Security</h3><p>VLAN tagging (802.1Q), trunking, multi-WAN load balancing and failover, firewall configuration, cybersecurity fundamentals.</p></div>
+      <div class="sk"><h3>Endpoint &amp; Hardware</h3><p>Windows 10/11 deployment and troubleshooting, custom PC builds, Dell laptop diagnostics, SOLIDWORKS and Crystal Reports XI support.</p></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>SWAGGIES · GITHUB.COM/SWAGGIESF5</span>
+    <span class="blink">PRESS START TO CONTINUE</span>
+  </footer>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+/* ---------- portfolio data ---------- */
+const SAVES=[
+  {id:'tpa',name:'THE POKER ADDICT',glyph:'PA',c1:'#3a2f9a',c2:'#8a7dff',size:'OWN PRODUCT',
+   title:'The Poker Addict',meta:[['ROLE','Founder · Full-stack + Infra'],['SITE','<a href="https://thepokeraddict.com" target="_blank" rel="noopener">thepokeraddict.com</a>'],['STATUS','Coming-soon page live']],
+   sum:'A Duolingo-style platform for learning poker strategy: short lessons, video content and paid access, built and hosted end to end.',
+   groups:[['Product',['Lesson-based poker strategy curriculum with streamed video','Accounts via Better Auth with Google sign-in','Payments through Stripe']],
+           ['Infrastructure',['Self-hosted on a VPS, managed with Coolify','PostgreSQL provisioned through Coolify, Cloudflare in front','Bunny Stream with token authentication for protected video','Diagnosed a Docker/ufw bypass (docker-proxy DNAT) and hardened the admin panel']]],
+   stack:['Next.js','TypeScript','Tailwind','shadcn/ui','PostgreSQL','Better Auth','Stripe','Bunny Stream','Coolify','Cloudflare']},
+  {id:'deeprun',name:'DEEPRUN',glyph:'DR',c1:'#7a0d12',c2:'#ff3b3b',size:'MAR–AUG 2026',
+   title:'DeepRun Academy · Developer (Full-stack, Infra & QA)',meta:[['ORG','DeepRun Academy, online poker academy'],['PERIOD','Mar – Aug 2026']],
+   sum:'Worked across the whole stack of a poker e-learning platform built on Next.js and Open edX: shipping features, debugging production problems, planning infrastructure, and automating a large solver batch on AWS.',
+   groups:[['Features shipped',['Discord membership verification: members link Discord from their profile through OAuth2 and a bot grants the Verified role, with one-to-one account binding, single-use CSRF state and strings in 6 languages (merged, +1,046 lines across 20 files)','Fixed OAuth redirects that resolved to the internal bind address behind the reverse proxy by deriving the public origin from forwarded headers']],
+           ['Infrastructure',['Served the frontend on a second domain for dev and UAT via the Tutor/Caddy config and Cloudflare DNS, and resolved the resulting TLS 525 by issuing certificates through HTTP-01 before re-enabling the proxy','Wrote the production migration plan from Google Cloud to AWS Singapore: EC2, EBS, Route 53, S3, pre-synced media, a 45–60 minute cutover and a 5-minute DNS rollback','Researched moving every service to organization-owned accounts to remove the single-person dependency, and built an AWS Lambda POC (API-triggered, writes to S3)']],
+           ['Root-cause analysis',['Traced iPhone video stalls on lessons of 5+ minutes to 1.14 GB untranscoded masters served straight from S3 without a CDN, after ruling out range requests, status codes, URL expiry and content type','Recommended transcoding the library (about 90% smaller files) and moving to HLS behind CloudFront, which also cuts egress cost']],
+           ['Solver automation (HRC)',['Built a JavaScript hand-config generator for poker Nash equilibrium solves, with ICM and chip-EV modes and stack distributions tuned with the vendor\'s support team','Automated a GUI-only solver unattended: AutoHotkey prototype, then xdotool on Linux, waiting on the app\'s own progress window instead of fixed delays','Ran ~4,000 hands on 10 AWS c6a.8xlarge instances with remote desktops (Amazon DCV), diagnosed an out-of-memory failure from accumulated tabs, and added a systemd watchdog that reports each box\'s state to Discord']],
+           ['QA & security',['Filed reproducible bug reports for the Open edX platform and frontend: device-specific CSRF failures, Studio errors, video ID reuse across courses, Stripe portal status and mobile language selector issues','Took part in remediation follow-up on findings from an external penetration test']]],
+   stack:['Next.js','TypeScript','Open edX','Tutor','Caddy','Cloudflare','AWS EC2','S3','Lambda','Discord API','OAuth2','Stripe','xdotool','systemd']},
+  {id:'zsop',name:'ZSOP',glyph:'Z',c1:'#14306e',c2:'#5aa8ff',size:'CURRENT',
+   title:'Zodiac Affairs (ZSOP) · Infrastructure & Deployment',meta:[['ROLE','Infrastructure, deployment, dev coordination'],['DOMAIN','Live poker tournament systems']],
+   sum:'Building and running the systems behind live poker tournaments: the PKO table display players see at the venue, and the infrastructure and data underneath it.',
+   groups:[['PKO system · table display',['Built Poker Live, a touchscreen tournament display for PKO (progressive knockout) events: tournament select, table select and a live table view with seats, stacks and bounties','Ported a static HTML prototype into a real Vite + Preact + TypeScript app on a fixed 1920×1080 stage scaled to any screen','One API interface with swappable adapters: the HTTP client, an in-app mock, and a zero-dependency stand-in server that speaks the real tournament API contract and simulates a live event','Resilient polling that keeps the last good data and shows a reconnecting state on failure, plus a table grid that scales to 50-table fields','Kiosk hardening: touch-only feedback, 44px+ tap targets, double-tap guards, wake lock, fullscreen, no zoom or overscroll; unit tests for seat geometry, formatting and polling']],
+           ['Migration',['Moved the tournament system from AWS to a Kamatera Singapore VPS on a deadline set by a live event in Taipei','Resolved post-migration SQL login orphans and firewall configuration']],
+           ['Debugging',['Traced a knockout bounty bug where an elimination was credited to the wrong player, by mapping the SQL Server schema and querying hand history directly']]],
+   stack:['Preact','TypeScript','Vite','Vitest','SQL Server','AWS','Kamatera','Linux']},
+  {id:'pem-it',name:'PRECISE · IT',glyph:'IT',c1:'#1d4a3a',c2:'#4fe0a8',size:'IT / SYSADMIN',
+   title:'Precise Electric Manufacturing · IT Specialist / System Administrator',meta:[['ORG','<a href="http://preciseproducts.industry.in.th" target="_blank" rel="noopener">Precise Electric Manufacturing Co., Ltd.</a>'],['ROLE','IT Specialist / System Administrator']],
+   sum:'Ran the day-to-day IT for a manufacturing company, from servers and network down to engineering workstations.',
+   groups:[['Infrastructure & hardware',['Server maintenance','Custom PC architecture','Dell laptop hardware diagnostics','Peripheral optimization']],
+           ['Operating systems & software',['Windows 10/11 deployment and troubleshooting','Linux system administration','Enterprise software support: SOLIDWORKS, Crystal Reports XI']],
+           ['Network & security',['Network troubleshooting and firewall basics','VLAN tagging (802.1Q) and trunking','Multi-WAN load balancing and failover']],
+           ['Data analysis',['Advanced Excel with PivotTables and data modeling for system reporting and asset management']]],
+   stack:['Windows','Linux','802.1Q VLAN','Multi-WAN','SOLIDWORKS','Crystal Reports XI','Excel']},
+  {id:'pem-dev',name:'PRECISE · DEV',glyph:'AR',c1:'#5a2a4a',c2:'#ff7ab8',size:'INTERNSHIP',
+   title:'Precise Electric Manufacturing · Full-stack Developer Intern',meta:[['ORG','<a href="http://preciseproducts.industry.in.th" target="_blank" rel="noopener">Precise Electric Manufacturing Co., Ltd.</a>'],['ROLE','Full-stack Developer Intern']],
+   sum:'Built a full-stack enterprise application for Accounts Receivable Credit Note Requests.',
+   groups:[['What it does',['Routes each credit note request through a multi-step approval workflow','Improves financial efficiency by replacing manual hand-offs','Supports compliance with a clear approval trail']]],
+   stack:['Full-stack','Approval workflow','Finance / AR']}
+];
+
+const slotsEl=document.getElementById('slots'),dataEl=document.getElementById('data');
+let cur=0;
+SAVES.forEach((s,i)=>{
+  const b=document.createElement('button');b.type='button';b.className='slot';b.id='slot-'+s.id;
+  b.style.setProperty('--c1',s.c1);b.style.setProperty('--c2',s.c2);
+  b.innerHTML='<div class="cube"><div class="in">'+'<div class="f">'+s.glyph+'</div>'.repeat(1)+'<div class="f">'+s.glyph+'</div><div class="f"></div><div class="f"></div><div class="f"></div><div class="f"></div></div></div><div class="nm">'+s.name+'</div><div class="sz">'+s.size+'</div>';
+  b.addEventListener('click',()=>select(i,true));
+  slotsEl.appendChild(b);
+});
+function esc(t){return t.replace(/&/g,'&amp;').replace(/</g,'&lt;')}
+function select(i,sound){
+  cur=(i+SAVES.length)%SAVES.length;const s=SAVES[cur];
+  [...slotsEl.children].forEach((b,k)=>b.setAttribute('aria-pressed',k===cur?'true':'false'));
+  let h='<dl class="meta">'+s.meta.map(m=>'<dt>'+m[0]+'</dt><dd>'+m[1]+'</dd>').join('')+'</dl><h3>'+esc(s.title)+'</h3>';
+  if(s.sum)h+='<p class="sum">'+esc(s.sum)+'</p>';
+  else h+='<p class="pending">SAVE DATA NOT YET WRITTEN · description coming soon</p>';
+  s.groups.forEach(g=>{h+='<div class="grp"><h4>'+esc(g[0])+'</h4><ul>'+g[1].map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul></div>'});
+  if(s.links)h+='<div class="chips">'+s.links.map(l=>'<a class="btn" href="'+l[1]+'" target="_blank" rel="noopener">'+esc(l[0])+' ↗</a>').join('')+'</div>';
+  if(s.stack.length)h+='<div class="chips">'+s.stack.map(x=>'<span class="chip">'+esc(x)+'</span>').join('')+'</div>';
+  dataEl.innerHTML=h;
+  if(sound)blip(520+cur*60);
+  if(window.__setHue)window.__setHue(s.c2);
+}
+addEventListener('keydown',e=>{
+  if(e.target.closest&&e.target.closest('a'))return;
+  if(e.key==='ArrowRight'||e.key==='ArrowDown'){if(document.activeElement&&document.activeElement.classList.contains('slot')){e.preventDefault();select(cur+1,true);slotsEl.children[cur].focus()}}
+  if(e.key==='ArrowLeft'||e.key==='ArrowUp'){if(document.activeElement&&document.activeElement.classList.contains('slot')){e.preventDefault();select(cur-1,true);slotsEl.children[cur].focus()}}
+});
+
+/* ---------- sound ---------- */
+let AC=null,master=null,on=false;
+function initAudio(){if(AC)return;AC=new (window.AudioContext||window.webkitAudioContext)();master=AC.createGain();master.gain.value=0;master.connect(AC.destination);
+  const lp=AC.createBiquadFilter();lp.type='lowpass';lp.frequency.value=500;lp.connect(master);
+  [55,55.5,82.4].forEach((f,i)=>{const o=AC.createOscillator();o.type=i<2?'sawtooth':'sine';o.frequency.value=f;const g=AC.createGain();g.gain.value=.05;o.connect(g);g.connect(lp);o.start()});
+  const d=AC.createDelay(1);d.delayTime.value=.38;const fb=AC.createGain();fb.gain.value=.4;d.connect(fb);fb.connect(d);d.connect(master);AC.echo=d;}
+function blip(f){if(!AC||!on)return;const o=AC.createOscillator(),g=AC.createGain(),n=AC.currentTime;o.frequency.value=f;g.gain.setValueAtTime(0,n);g.gain.linearRampToValueAtTime(.12,n+.01);g.gain.exponentialRampToValueAtTime(.0001,n+.9);o.connect(g);g.connect(master);g.connect(AC.echo);o.start(n);o.stop(n+1)}
+const sb=document.getElementById('snd');
+sb.addEventListener('click',()=>{initAudio();AC.resume&&AC.resume();on=!on;master.gain.setTargetAtTime(on?.6:0,AC.currentTime,.25);sb.textContent='SOUND: '+(on?'ON':'OFF');if(on)blip(784)});
+
+/* ---------- background scene ---------- */
+(function(){
+  if(typeof THREE==='undefined')return;
+  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const canvas=document.getElementById('stage');
+  const R=new THREE.WebGLRenderer({canvas,antialias:false});R.setPixelRatio(1);
+  const RES=0.4;
+  const scene=new THREE.Scene();scene.background=new THREE.Color(0x02030a);scene.fog=new THREE.FogExp2(0x040818,0.05);
+  const cam=new THREE.PerspectiveCamera(55,1,.1,200);
+  function rs(){R.setSize(Math.max(160,innerWidth*RES|0),Math.max(120,innerHeight*RES|0),false);cam.aspect=innerWidth/innerHeight;cam.updateProjectionMatrix()}
+  addEventListener('resize',rs);rs();
+  scene.add(new THREE.AmbientLight(0x1a2650,.6));
+  const dl=new THREE.DirectionalLight(0x6fa8ff,.3);dl.position.set(-5,12,4);scene.add(dl);
+
+  const c=document.createElement('canvas');c.width=c.height=64;const g=c.getContext('2d');const rg=g.createRadialGradient(32,32,0,32,32,32);
+  rg.addColorStop(0,'#fff');rg.addColorStop(.25,'rgba(200,225,255,.7)');rg.addColorStop(1,'rgba(0,0,0,0)');g.fillStyle=rg;g.fillRect(0,0,64,64);const GT=new THREE.CanvasTexture(c);
+
+  const N=15,SP=1.6,T=[];
+  const geo=new THREE.BoxGeometry(.62,1,.62);geo.translate(0,.5,0);
+  const mat=new THREE.MeshPhongMaterial({color:0x1b2d66,emissive:0x0a1440,specular:0x88bbff,shininess:60,transparent:true,opacity:.6});
+  const inst=new THREE.InstancedMesh(geo,mat,N*N);
+  const capMat=new THREE.MeshBasicMaterial({color:0x5aa8ff,transparent:true,opacity:.8,blending:THREE.AdditiveBlending,depthWrite:false});
+  const caps=new THREE.InstancedMesh(new THREE.BoxGeometry(.64,.04,.64),capMat,N*N);
+  let sd=11;const rnd=()=>(sd=sd*16807%2147483647)/2147483647;
+  for(let i=0;i<N;i++)for(let j=0;j<N;j++){const x=(i-(N-1)/2)*SP,z=(j-(N-1)/2)*SP,d=Math.hypot(x,z);
+    T.push({x,z,h:d<2.2?.001:.4+Math.pow(rnd(),2.2)*6*(.35+d/14),dl:d*.12+rnd()*.8,ph:rnd()*6.28,skip:d<2.2})}
+  scene.add(inst,caps);
+  const grid=new THREE.GridHelper(N*SP*1.4,N*2,0x2a4a9a,0x0f1d44);grid.material.transparent=true;grid.material.opacity=.3;scene.add(grid);
+
+  const orbs=[];
+  [0x7fc8ff,0x9a8cff,0x5ff0ff].forEach((col,k)=>{const L=new THREE.PointLight(col,2,9,2);
+    const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:GT,color:col,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false}));sp.scale.set(1.1,1.1,1);L.add(sp);scene.add(L);
+    orbs.push({L,r:2.6+k*1.8,s:.1+k*.05,ph:k*2,y:1.3+k*.8})});
+
+  const MN=380,mg=new THREE.BufferGeometry(),mp=new Float32Array(MN*3),mv=new Float32Array(MN);
+  for(let i=0;i<MN;i++){mp[i*3]=(Math.random()-.5)*26;mp[i*3+1]=Math.random()*14;mp[i*3+2]=(Math.random()-.5)*26;mv[i]=.15+Math.random()*.4}
+  mg.setAttribute('position',new THREE.BufferAttribute(mp,3));
+  scene.add(new THREE.Points(mg,new THREE.PointsMaterial({map:GT,size:.15,color:0x9fd4ff,transparent:true,opacity:.7,blending:THREE.AdditiveBlending,depthWrite:false})));
+
+  const sg=new THREE.BufferGeometry(),SN=1200,sp=new Float32Array(SN*3);
+  for(let i=0;i<SN;i++){const u=Math.random()*2-1,t=Math.random()*6.283,s=Math.sqrt(1-u*u);sp[i*3]=80*s*Math.cos(t);sp[i*3+1]=Math.abs(80*u)*.9+4;sp[i*3+2]=80*s*Math.sin(t)}
+  sg.setAttribute('position',new THREE.BufferAttribute(sp,3));
+  const starMat=new THREE.PointsMaterial({color:0xcfe4ff,size:1.4,sizeAttenuation:false,fog:false,transparent:true,opacity:0});scene.add(new THREE.Points(sg,starMat));
+
+  const target=new THREE.Color(0x5aa8ff);
+  window.__setHue=h=>target.set(h);
+
+  const M=new THREE.Matrix4(),Q=new THREE.Quaternion(),S=new THREE.Vector3(),P=new THREE.Vector3();
+  const e=x=>x<0?0:x>1?1:1-Math.pow(1-x,3);const t0=performance.now()/1000;
+  let scrollY=0;addEventListener('scroll',()=>{scrollY=window.scrollY},{passive:true});
+  function f(now){const t=now/1000,tt=t-t0,K=reduce?3:1;starMat.opacity=e((tt*K-1.2)/3)*.9;
+    for(let i=0;i<T.length;i++){const w=T[i],gr=w.skip?0:e((tt*K-2.2-w.dl*1.8)/2.4);const h=Math.max(.001,w.h*gr*(1+.04*Math.sin(t*.8+w.ph)));
+      P.set(w.x,0,w.z);S.set(1,h,1);M.compose(P,Q,S);inst.setMatrixAt(i,M);P.set(w.x,h,w.z);S.set(1,gr>.02?1:.001,1);M.compose(P,Q,S);caps.setMatrixAt(i,M)}
+    inst.instanceMatrix.needsUpdate=caps.instanceMatrix.needsUpdate=true;
+    capMat.color.lerp(target,.04);capMat.opacity=.5+.3*Math.sin(t*2.1);
+    orbs.forEach((o,k)=>{const a=t*o.s+o.ph;o.L.position.set(Math.cos(a)*o.r,o.y+Math.sin(t*.6+k)*.8,Math.sin(a*1.3)*o.r)});
+    const pa=mg.attributes.position.array;for(let i=0;i<MN;i++){pa[i*3+1]+=mv[i]*.016;if(pa[i*3+1]>14)pa[i*3+1]=0}mg.attributes.position.needsUpdate=true;
+    const sp=reduce?.01:.04,a=t*sp+.6,sc=Math.min(1,scrollY/1400);
+    const io=e(tt*K/9),rad=4+5.5*io,cy=14-11.4*io;cam.position.set(Math.cos(a)*rad,cy+sc*5,Math.sin(a)*rad);cam.lookAt(0,2.2*io-sc*1.5,0);
+    R.render(scene,cam);requestAnimationFrame(f)}
+  requestAnimationFrame(f);
+})();
+select(0,false);
+
+/* ---------- intro sequence ---------- */
+(function(){
+  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const intro=document.getElementById('intro'),bootEl=document.getElementById('boot'),mark=document.getElementById('mark'),startBtn=document.getElementById('start'),skipBtn=document.getElementById('skip');
+  document.body.classList.add('booting');
+  window.__booting=true;
+  const lines=['SW-BIOS  v2.04  (C) 2026','MEMORY CHECK ........ 32768K OK','VECTOR UNIT 0 ....... READY','VECTOR UNIT 1 ....... READY','MEMORY CARD SLOT 1 .. 5 SAVES','LOADING PORTFOLIO ...'];
+  const timers=[];
+  lines.forEach((l,i)=>timers.push(setTimeout(()=>{bootEl.textContent+=l+'\n';blip(600+i*80)},220*i+150)));
+  timers.push(setTimeout(()=>bootEl.classList.add('off'),1900));
+  timers.push(setTimeout(()=>{mark.classList.add('on');chime()},reduce?1800:6800));
+  timers.push(setTimeout(()=>{startBtn.classList.add('on');startBtn.focus({preventScroll:true})},reduce?2600:8800));
+  let done=false;
+  function enter(){if(done)return;done=true;timers.forEach(clearTimeout);chime();
+    intro.classList.add('gone');document.body.classList.remove('booting');window.__booting=false;skipBtn.hidden=true;
+    setTimeout(()=>{intro.hidden=true;const first=document.querySelector('.slot');first&&first.focus({preventScroll:true})},1300)}
+  startBtn.addEventListener('click',enter);skipBtn.addEventListener('click',enter);
+  addEventListener('keydown',e=>{if(!done&&(e.key==='Enter'||e.key===' ')&&startBtn.classList.contains('on')){e.preventDefault();enter()}});
+  function chime(){[523.3,784,1046.5,1568].forEach((f,i)=>setTimeout(()=>blip(f),i*140))}
+})();
+</script>
+
+</body>
+</html>

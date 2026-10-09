@@ -1,0 +1,100 @@
+#intro {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: grid;
+  place-items: center;
+  padding-inline: 16px;
+  transition: opacity 1.2s ease;
+}
+#intro.gone {
+  opacity: 0;
+  pointer-events: none;
+}
+body.booting {
+  overflow: hidden;
+}
+body.booting main {
+  opacity: 0;
+  pointer-events: none;
+}
+.boot {
+  position: fixed;
+  left: 16px;
+  top: calc(16px + env(safe-area-inset-top, 0px));
+  font-family: var(--f-term);
+  font-size: 1.05rem;
+  line-height: 1.25;
+  color: var(--dim);
+  white-space: pre;
+  transition: opacity 1.2s;
+}
+.boot.off {
+  opacity: 0;
+}
+.mark {
+  text-align: center;
+  opacity: 0;
+  filter: blur(8px);
+  transition:
+    opacity 2.4s ease,
+    filter 2.4s ease;
+}
+.mark.on {
+  opacity: 1;
+  filter: blur(0);
+}
+.mark h2 {
+  font-family: var(--f-display);
+  font-weight: 700;
+  font-size: clamp(1.8rem, 8vw, 4.6rem);
+  letter-spacing: 0.38em;
+  padding-left: 0.38em;
+  margin: 0;
+  color: #eef6ff;
+  text-shadow:
+    0 0 10px var(--glow),
+    0 0 34px rgba(90, 168, 255, 0.5),
+    2px 0 rgba(255, 60, 120, 0.3),
+    -2px 0 rgba(60, 220, 255, 0.3);
+}
+.mark p {
+  font-family: var(--f-display);
+  font-size: clamp(0.55rem, 1.6vw, 0.8rem);
+  letter-spacing: 0.6em;
+  padding-left: 0.6em;
+  color: var(--dim);
+  margin: 1.1rem 0 0;
+}
+#start {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: calc(14vh + env(safe-area-inset-bottom, 0px));
+  font-family: var(--f-term);
+  font-size: clamp(1.3rem, 3vw, 1.8rem);
+  letter-spacing: 0.3em;
+  padding: 0.2rem 1rem 0.2rem 1.3rem;
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--ice);
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 1.5s;
+  pointer-events: none;
+}
+#start.on {
+  opacity: 1;
+  pointer-events: auto;
+  animation: bl 1.6s steps(1) infinite 1.5s;
+}
+#start:hover {
+  border-color: var(--line);
+}
+
+/* Deliberate fix over the original: START stays fully visible, it just doesn't blink */
+@media (prefers-reduced-motion: reduce) {
+  #start.on {
+    animation: none;
+  }
+}

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <rect width="32" height="32" rx="4" fill="#02030a"/>
+  <!-- isometric save cube: top, left, right faces -->
+  <path d="M16 4 L27 10 L16 16 L5 10 Z" fill="#8fc4ff"/>
+  <path d="M5 10 L16 16 L16 28 L5 22 Z" fill="#3a2f9a"/>
+  <path d="M27 10 L16 16 L16 28 L27 22 Z" fill="#5aa8ff"/>
+  <path d="M16 4 L27 10 L27 22 L16 28 L5 22 L5 10 Z M16 16 L16 28 M5 10 L16 16 L27 10" fill="none" stroke="#cfe6ff" stroke-width="1" stroke-linejoin="round"/>
+</svg>

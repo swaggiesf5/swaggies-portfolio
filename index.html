@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Swaggies</title>
+    <meta
+      name="description"
+      content="Swaggies — full-stack, infrastructure and systems portfolio."
+    />
+    <meta name="theme-color" content="#02030a" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Swaggies" />
+    <meta
+      property="og:description"
+      content="Swaggies — full-stack, infrastructure and systems portfolio."
+    />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=VT323&family=IBM+Plex+Sans:wght@400;500&display=swap"
+    />
+    <noscript>
+      <style>
+        body.booting {
+          overflow: auto;
+        }
+        body.booting main {
+          opacity: 1;
+          pointer-events: auto;
+        }
+        #intro,
+        .dock {
+          display: none;
+        }
+      </style>
+    </noscript>
+    <script type="module" src="/src/main.ts"></script>
+  </head>
+  <body class="booting">
+    <canvas id="stage" aria-hidden="true"></canvas>
+    <div class="crt scan"></div>
+    <div class="crt vig"></div>
+
+    <div id="intro">
+      <div class="boot" id="boot" aria-hidden="true"></div>
+      <div class="mark" id="mark"><h2>SWAGGIES</h2></div>
+      <button id="start" type="button">PRESS START</button>
+    </div>
+    <div class="dock">
+      <button class="btn" id="snd" type="button">SOUND: OFF</button>
+      <button class="btn" id="skip" type="button">SKIP</button>
+    </div>
+    <main>
+      <header class="hero">
+        <div class="sys">SYSTEM READY · BANGKOK / NONTHABURI, TH · UTC+7</div>
+        <h1>SWAGGIES</h1>
+        <p class="role">FULL-STACK · INFRASTRUCTURE · SYSTEMS</p>
+        <p class="lede">
+          I build web applications and keep the machines under them running: approval workflows for
+          finance teams, live tournament infrastructure, and a learning platform for poker strategy.
+          Comfortable anywhere from a React component down to a VLAN trunk.
+        </p>
+        <div class="links">
+          <a class="btn" href="https://github.com/swaggiesf5" target="_blank" rel="noopener"
+            >GITHUB ↗</a
+          >
+          <a class="btn" href="https://thepokeraddict.com" target="_blank" rel="noopener"
+            >THEPOKERADDICT.COM ↗</a
+          >
+        </div>
+      </header>
+
+      <section aria-labelledby="mc">
+        <div class="head">
+          <h2 id="mc">MEMORY CARD · SLOT 1</h2>
+          <span id="free"></span>
+        </div>
+        <div class="browser">
+          <div class="slots" id="slots" role="group" aria-label="Projects"></div>
+          <article class="data" id="data" aria-live="polite"></article>
+        </div>
+      </section>
+
+      <section aria-labelledby="sk">
+        <div class="head">
+          <h2 id="sk">SYSTEM CONFIGURATION</h2>
+          <span>SKILLS</span>
+        </div>
+        <div class="skills" id="skills"></div>
+      </section>
+
+      <footer>
+        <span>SWAGGIES · GITHUB.COM/SWAGGIESF5</span>
+        <span class="blink">PRESS START TO CONTINUE</span>
+      </footer>
+    </main>
+  </body>
+</html>
